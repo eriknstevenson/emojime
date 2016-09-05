@@ -21,9 +21,10 @@ curl localhost:3000/250/250/red
 
 ##Planned features
 
-- Request specific emoji (By unicode, or by shortname).
-- Random background colors.
-- Disable/Enable the size label on returned SVG.
+- [ ] Request specific emoji (By unicode, or by shortname).
+- [ ] Random background colors.
+- [ ] Disable/Enable the size label on returned SVG.
+- [ ] Homepage
 
 ##Credits
 
