@@ -1,6 +1,6 @@
-#EmojiMe
+#EmojiMe![1f61c](https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f61c.png)
 
-Get Emoji placeholder SVG on demand.
+Get Emoji placeholder SVG on demand. 
 
 ##Building
 
