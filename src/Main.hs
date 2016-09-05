@@ -10,8 +10,6 @@ import Control.Monad.Reader
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Default
-import Data.List
-import Data.List.Split
 import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -47,9 +45,10 @@ main = do
 
   resp <- Wreq.get emojiListURL
 
-  let rawCodes = resp ^.. Wreq.responseBody.members.peopleCodes._String
-      splitCodes = nub . concatMap (map T.pack . splitOn "-" . T.unpack) $ rawCodes
-      codeCount = length splitCodes
+  let codes = resp ^.. Wreq.responseBody.members.peopleCodes._String
+      --I dont think this is actually necessary.
+      --splitCodes = nub . concatMap (map T.pack . splitOn "-" . T.unpack) $ rawCodes
+      codeCount = length codes
 
   putStrLn $ show codeCount <> " emojis found."
 
@@ -61,13 +60,13 @@ main = do
     get "/:width/:height/" $ do
       status ok200
       (w, h) <- getRequestedSize
-      code <- liftIO $ (splitCodes !!) <$> randomRIO (0, codeCount)
+      code <- liftIO $ (codes !!) <$> randomRIO (0, codeCount)
       raw $ runReader (renderBST genSvg) (Config (Dimension w h) "gray" (Dimension 500 500) code)
     get "/:width/:height/:color" $ do
       status ok200
       (w, h) <- getRequestedSize
       color <- param "color"
-      code <- liftIO $ (splitCodes !!) <$> randomRIO (0, codeCount)
+      code <- liftIO $ (codes !!) <$> randomRIO (0, codeCount)
       raw $ runReader (renderBST genSvg) (Config (Dimension w h) color (Dimension 500 500) code)
     notFound $ status notFound404
 

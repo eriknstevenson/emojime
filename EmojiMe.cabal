@@ -27,7 +27,6 @@ executable emojime-exe
                      , mtl
                      , random
                      , scotty
-                     , split
                      , text
                      , wai-extra
                      , wreq
