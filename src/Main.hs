@@ -129,8 +129,6 @@ label = do
   buildText `with` [y_ "75%", x_ "50%", fill_ "white"]
 
   where
-    -- temporary while waiting for PR on lucid-svg package.
-    -- see: https://github.com/jeffreyrosenbluth/lucid-svg/pull/11
     filter_' = term "filter"
 
     buildText = do
