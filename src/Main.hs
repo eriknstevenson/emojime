@@ -10,6 +10,7 @@ import Control.Monad.Reader
 import Data.Aeson (Value)
 import Data.Aeson.Lens
 import Data.Default
+import Data.Maybe
 import Data.Monoid
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -18,15 +19,15 @@ import qualified Lucid.Svg.Attributes as A (filter_)
 import Network.HTTP.Types.Status
 import Network.Wai.Middleware.RequestLogger
 import qualified Network.Wreq as Wreq
+import System.Environment
 import System.Random
+import Text.Read hiding (lift, get)
 import Web.Scotty
-
 
 data Dimension a = Dimension a a deriving (Eq, Read)
 
 instance Show a => Show (Dimension a) where
   show (Dimension w h) = show w <> " X " <> show h
-
 
 data Config = Config
   { _size :: Dimension Int
@@ -39,20 +40,19 @@ makeLenses ''Config
 instance Default Config where
   def = Config (Dimension 300 300) "gray" (Dimension 500 500) "1f61c"
 
-
 main :: IO ()
 main = do
 
   resp <- Wreq.get emojiListURL
 
   let codes = resp ^.. Wreq.responseBody.members.peopleCodes._String
-      --I dont think this is actually necessary.
-      --splitCodes = nub . concatMap (map T.pack . splitOn "-" . T.unpack) $ rawCodes
       codeCount = length codes
 
   putStrLn $ show codeCount <> " emojis found."
 
-  scotty 3000 $ do
+  port <- lookupEnv "PORT"
+
+  scotty (fromMaybe (3000::Int) (port >>= readMaybe))$ do
     middleware logStdoutDev
     get "/" $ do
       status ok200
